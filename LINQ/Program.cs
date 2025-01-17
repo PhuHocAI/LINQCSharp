@@ -37,48 +37,88 @@
 //Ta sẽ học trọng tâm vào Linq to Entity Framework 
 //}
 //}
-using System.Text;
 using LINQ;
 
 class Program
 {
     static void Main()
     {
-        Console.OutputEncoding = Encoding.UTF8;
-        List<Product> products = new List<Product>
-        {
-            new Product { Id = 1, Name = "Laptop", Price = 1500 },
-            new Product { Id = 2, Name = "Smartphone", Price = 1200 },
-            new Product { Id = 3, Name = "Tablet", Price = 1800 },
-            new Product { Id = 4, Name = "Headphones", Price = 200 },
-            new Product { Id = 5, Name = "Smartwatch", Price = 300 }
-        };
-        var danhSach = from p in products where p.Price > 1000 select p;
-        Console.WriteLine(danhSach.FirstOrDefault().Name);
-        //foreach (var item in danhSach)
+        //Console.OutputEncoding = Encoding.UTF8;
+        //List<Product> products = new List<Product>
         //{
-        //    Console.WriteLine(item.Name);
-        //}
+        //    new Product { Id = 1, Name = "Laptop", Price = 1500 },
+        //    new Product { Id = 2, Name = "Smartphone", Price = 1200 },
+        //    new Product { Id = 3, Name = "Tablet", Price = 1800 },
+        //    new Product { Id = 4, Name = "Headphones", Price = 200 },
+        //    new Product { Id = 5, Name = "Smartwatch", Price = 300 }
+        //};
+        //var danhSach = from p in products where p.Price > 1000 select p;
+        //Console.WriteLine(danhSach.FirstOrDefault().Name);
+        ////foreach (var item in danhSach)
+        ////{
+        ////    Console.WriteLine(item.Name);
+        ////}
 
-        //Cách viết Lamda Expression
-        var product = products.OrderByDescending(p => p.Price!).FirstOrDefault();
+        ////Cách viết Lamda Expression
+        //var product = products.OrderByDescending(p => p.Price!).FirstOrDefault();
         //tới khúc đó không thể . thêm được method nào nữa vì sau FirstOrDefault là phần tử cuối cùng rồi
         //First() trả về phần tử đầu tiên, nếu không có phần tử nào thì sẽ báo lỗi
         //FirstOrDefault() trả về phần tử đầu tiên, nếu không có phần tử nào thì trả về null để check null
         //Console.WriteLine(product!.Name);//để dấu ! để bỏ qua lỗi null (không khuyến khích)
-        if (product == null)
+        //if (product == null)
+        //{
+        //    return;//sau này sẽ follow theo flow code này
+        //}
+        //Console.WriteLine(product.Name);
+
+        //List<string> animals = new List<string> { "Cat", "Dog", "Elephant", "Deer", "Cheetah", "Dolphin" };
+
+        //// Nhóm động vật theo chữ cái đầu tiên
+        //var groupedAnimals = from animal in animals
+        //                     group animal by animal[0] into animalGroup
+        //                     orderby animalGroup.Key//Key là animal[0]
+        //                     select animalGroup;
+        // Danh sách sinh viên
+        List<Student> students = new List<Student>
         {
-            return;//sau này sẽ follow theo flow code này
+            new Student { Id = 1, Name = "Alice" },
+            new Student { Id = 2, Name = "Bob" },
+            new Student { Id = 3, Name = "Charlie" }
+        };
+
+        // Danh sách khóa học sinh viên đã đăng ký
+        List<Enrollment> enrollments = new List<Enrollment>
+        {
+            new Enrollment { StudentId = 1, Course = "Math" },
+            new Enrollment { StudentId = 1, Course = "Physics" },
+            new Enrollment { StudentId = 2, Course = "Chemistry" },
+            new Enrollment { StudentId = 3, Course = "Biology" }
+        };
+
+        var query = from student in students
+                    join enrollment in enrollments
+                    on student.Id equals enrollment.StudentId
+                    select new
+                    {
+                        StudentName = student.Name,
+                        Course = enrollment.Course
+                    };
+        //mặc định là left outer join
+        //var onlyNameStudent = students.Select(student => student.Name).ToList();
+        //foreach (var item in onlyNameStudent)
+        //{
+        //    Console.WriteLine(item);
+        //}
+        var customStudent = students.Select(x => new
+        {//
+            Name = x.Name,
+            School = "FPT",
+            Code = x.Name + x.Id
+        }).ToList();
+        foreach (var item in customStudent)
+        {
+            Console.WriteLine(item.Code);
         }
-        Console.WriteLine(product.Name);
-
-        List<string> animals = new List<string> { "Cat", "Dog", "Elephant", "Deer", "Cheetah", "Dolphin" };
-
-        // Nhóm động vật theo chữ cái đầu tiên
-        var groupedAnimals = from animal in animals
-                             group animal by animal[0] into animalGroup
-                             orderby animalGroup.Key//Key là animal[0]
-                             select animalGroup;
 
     }
 }
